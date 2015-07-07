@@ -26,10 +26,9 @@
 %                  Bertolt-Brecht-Allee
 
 
-
 % facts
 trafficLight(1..16).
-time(1..10).
+time(1..1000).
 
 
 carsPerScond(1,0).
@@ -129,7 +128,41 @@ conflict(8, 3).
 conflict(8, 5).
 conflict(8, 6).
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%						Constraint (c): Ped can cross the street
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%Constraint See (b)
+
+%Facts
+conflict(8, 14).
+conflict(8, 16).
+
+conflict(7, 9).
+conflict(7, 11).
+conflict(7, 16).
+
+
+conflict(6, 11).
+conflict(6, 12).
+
+conflict(5, 12).
+conflict(5, 15).
+conflict(5, 9).
+
+conflict(4, 9).
+conflict(4, 10).
+
+conflict(3, 10).
+conflict(3, 14).
+conflict(3, 15).
+
+conflict(2, 9).
+conflict(2, 15).
+
+conflict(1, 9).
+conflict(1, 11).
+conflict(1, 14).
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %						Constraint: Maximal red phase (d) Unbekannt
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -139,7 +172,7 @@ conflict(8, 6).
 %lengthGreen(L,T,X+1) :- green(L,T+1), lengthGreen(L,T,X).
 %:- lengthGreen(L,T,X), X > 120.
 
-:- 4{ not green(L, T..T+3)}4, trafficLight(L), time(T), T<8.
+:- 120{ not green(L, T..T+119)}120, trafficLight(L), time(T), T<880.
 
 
 
