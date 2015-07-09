@@ -138,7 +138,7 @@ trams = {
 }
 
 
-with open("tram.lp", "wa") as lpFile:
+with open("tram.lp", "w") as lpFile:
         for tram, data in trams.items():
                 for hour, minutes in data.items():
                         for minute in minutes:
