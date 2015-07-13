@@ -31,7 +31,7 @@
 #const startRH2 = 700.
 #const endRH2 = 900.
 #const maxRed = 120.
-
+#const minConflictTime = 3.
 % facts
 trafficLight(1..16).
 time(startTime..endTime).
@@ -54,14 +54,14 @@ carsPerSeconds(8,880).
 % Constraint: Minimal green phase (a)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % if ped. traffic light turns green, it stays green for X seconds
-%20 {green(L,T..T+19)} 20 :- not green(L,T-1), green(L,T), L=9.
-% 7 {green(L,T..T+ 6)}  7 :- not green(L,T-1), green(L,T), L=10.
-% 7 {green(L,T..T+ 6)}  7 :- not green(L,T-1), green(L,T), L=11.
-% 8 {green(L,T..T+ 7)}  8 :- not green(L,T-1), green(L,T), L=12.
-% 8 {green(L,T..T+ 7)}  8 :- not green(L,T-1), green(L,T), L=13.
-% 8 {green(L,T..T+ 7)}  8 :- not green(L,T-1), green(L,T), L=14.
-% 9 {green(L,T..T+ 8)}  9 :- not green(L,T-1), green(L,T), L=15.
-% 9 {green(L,T..T+ 8)}  9 :- not green(L,T-1), green(L,T), L=16.
+20 {green(L,T..T+19)} 20 :- not green(L,T-1), green(L,T), L=9.
+ 7 {green(L,T..T+ 6)}  7 :- not green(L,T-1), green(L,T), L=10.
+ 7 {green(L,T..T+ 6)}  7 :- not green(L,T-1), green(L,T), L=11.
+ 8 {green(L,T..T+ 7)}  8 :- not green(L,T-1), green(L,T), L=12.
+ 8 {green(L,T..T+ 7)}  8 :- not green(L,T-1), green(L,T), L=13.
+ 8 {green(L,T..T+ 7)}  8 :- not green(L,T-1), green(L,T), L=14.
+ 9 {green(L,T..T+ 8)}  9 :- not green(L,T-1), green(L,T), L=15.
+ 9 {green(L,T..T+ 8)} 9 :- not green(L,T-1), green(L,T), L=16.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -69,7 +69,7 @@ carsPerSeconds(8,880).
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % constraints
 :- green(L1, T), conflict(L1, L2), green(L2, T).
-
+not green(L2, T+1), not green(L2, T+2), not green(L2, T+3) :- green(L1, T), conflict(L1, L2), T<endTime -3 .
 % car-car conflicts facts
 conflict(1, 3).
 conflict(1, 4).
@@ -161,7 +161,7 @@ conflict(1, 14).
 % if traffic light turns red
 % -> it is not allowed to stay red for more than 120 seconds
 
-:- maxRed { not green(L, T..T+maxRed-1) } maxRed, trafficLight(L), time(T).
+:- maxRed { not green(L, T..T+maxRed-1) } maxRed, trafficLight(L), time(T), T< endTime - maxRed.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -200,46 +200,46 @@ numCarsB(X) :- X = #sum { C : carsPerSeconds(1,C), green(1,T), time(T), T=startR
 numCarsS(X) :- X = #sum { C : carsPerSeconds(5,C), green(5,T), time(T), T=startRH1..endRH1 }.
 #maximize { X@2 : numCarsS(X) }.
 
-% rush hour 2
-numCars(X) :- X = #sum { C : carsPerSeconds(L,C), green(L,T), trafficLight(L), time(T), T=startRH2..endRH2, L!=1, L!=5 }.
-#maximize { X@1 : numCars(X) }.
-
-numCarsB(X) :- X = #sum { C : carsPerSeconds(1,C), green(1,T), time(T), T=startRH2..endRH2 }.
-#maximize { X@2 : numCarsB(X) }.
-
-numCarsS(X) :- X = #sum { C : carsPerSeconds(5,C), green(5,T), time(T), T=startRH2..endRH2 }.
-#maximize { X@2 : numCarsS(X) }.
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Constraint normal hours (h)
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% normal hours 1
-cnt(X) :- X = #count { L,T : not green(L,T), trafficLight(L), time(T), T=startTime..startRH1-1, L!=1, L!=5 }.
-#minimize { X@1 : cnt(X) }.
-
-cntB(X) :- X = #count { T : not green(1,T), trafficLight(1), time(T), T=startTime..startRH1-1 }.
-#minimize { X@2 : cntB(X) }.
-
-cntS(X) :- X = #count { T : not green(5,T), trafficLight(5), time(T), T=startTime..startRH1-1 }.
-#minimize { X@2 : cntS(X) }.
-
-% normal hours 2
-cnt(X) :- X = #count { L,T : not green(L,T), trafficLight(L), time(T), T=endRH1+1..startRH2-1, L!=1, L!=5 }.
-#minimize { X@1 : cnt(X) }.
-
-cntB(X) :- X = #count { T : not green(1,T), trafficLight(1), time(T), T=endRH1+1..startRH2-1 }.
-#minimize { X@2 : cntB(X) }.
-
-cntS(X) :- X = #count { T : not green(5,T), trafficLight(5), time(T), T=endRH1+1..startRH2-1 }.
-#minimize { X@2 : cntS(X) }.
-
-% normal hours 3
-cnt(X) :- X = #count { L,T : not green(L,T), trafficLight(L), time(T), T=endRH2+1..endTime, L!=1, L!=5 }.
-#minimize { X@1 : cnt(X) }.
-
-cntB(X) :- X = #count { T : not green(1,T), trafficLight(1), time(T), T=endRH2+1..endTime }.
-#minimize { X@2 : cntB(X) }.
-
-cntS(X) :- X = #count { T : not green(5,T), trafficLight(5), time(T), T=endRH2+1..endTime }.
-#minimize { X@2 : cntS(X) }.
+% % rush hour 2
+ numCars(X) :- X = #sum { C : carsPerSeconds(L,C), green(L,T), trafficLight(L), time(T), T=startRH2..endRH2, L!=1, L!=5 }.
+ #maximize { X@1 : numCars(X) }.
+% 
+ numCarsB(X) :- X = #sum { C : carsPerSeconds(1,C), green(1,T), time(T), T=startRH2..endRH2 }.
+ #maximize { X@2 : numCarsB(X) }.
+% 
+ numCarsS(X) :- X = #sum { C : carsPerSeconds(5,C), green(5,T), time(T), T=startRH2..endRH2 }.
+ #maximize { X@2 : numCarsS(X) }.
+% 
+% 
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% % Constraint normal hours (h)
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% % normal hours 1
+ cnt(X) :- X = #count { L,T : not green(L,T), trafficLight(L), time(T), T=startTime..startRH1-1, L!=1, L!=5 }.
+ #minimize { X@1 : cnt(X) }.
+% 
+ cntB(X) :- X = #count { T : not green(1,T), trafficLight(1), time(T), T=startTime..startRH1-1 }.
+ #minimize { X@2 : cntB(X) }.
+% 
+ cntS(X) :- X = #count { T : not green(5,T), trafficLight(5), time(T), T=startTime..startRH1-1 }.
+ #minimize { X@2 : cntS(X) }.
+% 
+% % normal hours 2
+ cnt(X) :- X = #count { L,T : not green(L,T), trafficLight(L), time(T), T=endRH1+1..startRH2-1, L!=1, L!=5 }.
+ #minimize { X@1 : cnt(X) }.
+% 
+ cntB(X) :- X = #count { T : not green(1,T), trafficLight(1), time(T), T=endRH1+1..startRH2-1 }.
+ #minimize { X@2 : cntB(X) }.
+% 
+ cntS(X) :- X = #count { T : not green(5,T), trafficLight(5), time(T), T=endRH1+1..startRH2-1 }.
+ #minimize { X@2 : cntS(X) }.
+% 
+% % normal hours 3
+ cnt(X) :- X = #count { L,T : not green(L,T), trafficLight(L), time(T), T=endRH2+1..endTime, L!=1, L!=5 }.
+ #minimize { X@1 : cnt(X) }.
+% 
+ cntB(X) :- X = #count { T : not green(1,T), trafficLight(1), time(T), T=endRH2+1..endTime }.
+ #minimize { X@2 : cntB(X) }.
+% 
+ cntS(X) :- X = #count { T : not green(5,T), trafficLight(5), time(T), T=endRH2+1..endTime }.
+ #minimize { X@2 : cntS(X) }.
