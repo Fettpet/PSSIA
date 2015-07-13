@@ -25,7 +25,7 @@
 %                  Bertolt-Brecht-Allee
 
 #const startTime = 1.
-#const endTime = 1000.
+#const endTime = 250.
 #const startRH1 = 200.
 #const endRH1 = 300.
 #const startRH2 = 700.
@@ -52,6 +52,13 @@ carsPerSeconds(8,880).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Constraint: Minimal green phase (a)
+% Peter
+% Pedestrian lights need a minimal time of green phase such that a slow walking person can cross. These are the following.
+% Borsbergstraße:19:20sec
+% Spenerstraße:2x6:75sec
+% Schandauer Str.:3x7:15sec
+% Bertolt-Brecht-Allee:2x 8:40 sec
+% Note,i x t means that the pedestrian crossing is divided into i parts and for each, one needs t seconds to cross.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % if ped. traffic light turns green, it stays green for X seconds
  green(L,T+1), green(L,T+2), green(L,T+3), green(L,T+4), green(L,T+5), green(L,T+6), green(L,T+7), green(L,T+8), green(L,T+9), green(L,T+10), green(L,T+11), green(L,T+12), green(L,T+13), green(L,T+14), green(L,T+15), green(L,T+16), green(L,T+17), green(L,T+19) :- not green(L,T-1), green(L,T), L=9, T<endTime-19.
@@ -66,10 +73,16 @@ carsPerSeconds(8,880).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Constraint: No accidents (b)
+% Sebastian
+% t is not allowed to have green lights for pedestrians when the cars can cross their
+% way, except if both go in the same direction. For example,
+% –if 1) left is green, the pedestrian light of Spenerstraße needs to be red.
+% –If 2) left is green, the pedestrian light of Borsbergstraße needs to be red.
+% –If 3) left is green, the pedestrian light of Bertolt-Brecht-Allee needs to be red.
+% –If 4) left is green, the pedestrian light of Schandauer Str. needs to be red.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % constraints
 :- green(L1, T), conflict(L1, L2), green(L2, T).
-not green(L2, T+1), not green(L2, T+2), not green(L2, T+3) :- green(L1, T), conflict(L1, L2), T<endTime -3 .
 % car-car conflicts facts
 conflict(1, 3).
 conflict(1, 4).
@@ -118,13 +131,6 @@ conflict(8, 2).
 conflict(8, 3).
 conflict(8, 5).
 conflict(8, 6).
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Constraint (c): Ped can cross the street
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% constraint See (b)
-
 % ped-car conflicts facts
 conflict(8, 14).
 conflict(8, 16).
@@ -156,16 +162,25 @@ conflict(1, 14).
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Constraint: Maximal red phase (d) Unbekannt
+% Constraint (c): between switching of green phases consider 3 sec of red phase for all directions
+% Julius
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+not green(L2, T+1), not green(L2, T+2), not green(L2, T+3) :- green(L1, T), conflict(L1, L2), T<endTime -3 .
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Constraint: Consider a maximal waiting time of 2 min always.
+% Peter
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % if traffic light turns red
 % -> it is not allowed to stay red for more than 120 seconds
-
 :- maxRed { not green(L, T..T+maxRed-1) } maxRed, trafficLight(L), time(T), T< endTime - maxRed.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Constraint Tram has priority (e)
+% Constraint 
+%The Buses and Trams should always pass when they are scheduled 
+% Sebastian
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % if tram arrives -> green
 % Tram 4
@@ -184,11 +199,17 @@ green(1, T) :- tramArrive(642, T), time(T).
 green(6, T) :- tramArrive(631, T), time(T).
 green(3, T) :- tramArrive(632, T), time(T).
 
+% Julius (exact schedule
+% see stop Spenerstraße at https://www.dvb.de/de-de/fahrplan/haltestellenauskunft/
 #include "tram.lp".
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%Calculate traffic lights from 6:00 to 21:00 with rush hours 7:30-9:30 and 17:00-19:00
+%During rush hour maximize the number of cars passing the crossing with priority
+%on Borsbergstrasse
 % Constraint rush hour (g)
+% Peter
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % rush hour 1
 numCars(X) :- X = #sum { C : carsPerSeconds(L,C), green(L,T), trafficLight(L), time(T), T=startRH1..endRH1, L!=1, L!=5 }.
@@ -212,7 +233,10 @@ numCarsS(X) :- X = #sum { C : carsPerSeconds(5,C), green(5,T), time(T), T=startR
 % 
 % 
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%During the remaining time minimize the waiting time (red phase) with priority on
+%Borsbergstrasse
 % % Constraint normal hours (h)
+% Peter
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % % normal hours 1
  cnt(X) :- X = #count { L,T : not green(L,T), trafficLight(L), time(T), T=startTime..startRH1-1, L!=1, L!=5 }.
@@ -243,3 +267,6 @@ numCarsS(X) :- X = #sum { C : carsPerSeconds(5,C), green(5,T), time(T), T=startR
 % 
  cntS(X) :- X = #count { T : not green(5,T), trafficLight(5), time(T), T=endRH2+1..endTime }.
  #minimize { X@2 : cntS(X) }.
+ 
+ 
+#show green/2.
