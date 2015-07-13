@@ -54,14 +54,14 @@ carsPerSeconds(8,880).
 % Constraint: Minimal green phase (a)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % if ped. traffic light turns green, it stays green for X seconds
-20 {green(L,T..T+19)} 20 :- not green(L,T-1), green(L,T), L=9.
- 7 {green(L,T..T+ 6)}  7 :- not green(L,T-1), green(L,T), L=10.
- 7 {green(L,T..T+ 6)}  7 :- not green(L,T-1), green(L,T), L=11.
- 8 {green(L,T..T+ 7)}  8 :- not green(L,T-1), green(L,T), L=12.
- 8 {green(L,T..T+ 7)}  8 :- not green(L,T-1), green(L,T), L=13.
- 8 {green(L,T..T+ 7)}  8 :- not green(L,T-1), green(L,T), L=14.
- 9 {green(L,T..T+ 8)}  9 :- not green(L,T-1), green(L,T), L=15.
- 9 {green(L,T..T+ 8)} 9 :- not green(L,T-1), green(L,T), L=16.
+ green(L,T+1), green(L,T+2), green(L,T+3), green(L,T+4), green(L,T+5), green(L,T+6), green(L,T+7), green(L,T+8), green(L,T+9), green(L,T+10), green(L,T+11), green(L,T+12), green(L,T+13), green(L,T+14), green(L,T+15), green(L,T+16), green(L,T+17), green(L,T+19) :- not green(L,T-1), green(L,T), L=9, T<endTime-19.
+ green(L,T+1), green(L,T+2), green(L,T+3), green(L,T+4), green(L,T+5), green(L,T+6)  :- not green(L,T-1), green(L,T), L=10, T<endTime-6.
+ green(L,T+1), green(L,T+2), green(L,T+3), green(L,T+4), green(L,T+5), green(L,T+6)  :- not green(L,T-1), green(L,T), L=11, T<endTime-6.
+ green(L,T+1), green(L,T+2), green(L,T+3), green(L,T+4), green(L,T+5), green(L,T+6), green(L,T+7) :- not green(L,T-1), green(L,T), L=12, T<endTime-7.
+ green(L,T+1), green(L,T+2), green(L,T+3), green(L,T+4), green(L,T+5), green(L,T+6), green(L,T+7) :- not green(L,T-1), green(L,T), L=13, T<endTime-7.
+ green(L,T+1), green(L,T+2), green(L,T+3), green(L,T+4), green(L,T+5), green(L,T+6), green(L,T+7) :- not green(L,T-1), green(L,T), L=14, T<endTime-7.
+ green(L,T+1), green(L,T+2), green(L,T+3), green(L,T+4), green(L,T+5), green(L,T+6), green(L,T+7), green(L,T+8)  :- not green(L,T-1), green(L,T), L=15, T<endTime-8.
+ green(L,T+1), green(L,T+2), green(L,T+3), green(L,T+4), green(L,T+5), green(L,T+6), green(L,T+7), green(L,T+8)  :- not green(L,T-1), green(L,T), L=16, T<endTime-8.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
