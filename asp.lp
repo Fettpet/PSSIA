@@ -24,12 +24,12 @@
 %                     Grosser Garten
 %                  Bertolt-Brecht-Allee
 
-#const startTime = 1.
-#const endTime = 250.
-#const startRH1 = 200.
-#const endRH1 = 300.
-#const startRH2 = 700.
-#const endRH2 = 900.
+#const startTime = 25000.
+#const endTime = 26000.
+#const startRH1 = 25180.
+#const endRH1 = 25360.
+#const startRH2 = 25500.
+#const endRH2 = 25700.
 #const maxRed = 120.
 #const minConflictTime = 3.
 % facts
@@ -61,14 +61,14 @@ carsPerSeconds(8,880).
 % Note,i x t means that the pedestrian crossing is divided into i parts and for each, one needs t seconds to cross.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % if ped. traffic light turns green, it stays green for X seconds
- green(L,T+1), green(L,T+2), green(L,T+3), green(L,T+4), green(L,T+5), green(L,T+6), green(L,T+7), green(L,T+8), green(L,T+9), green(L,T+10), green(L,T+11), green(L,T+12), green(L,T+13), green(L,T+14), green(L,T+15), green(L,T+16), green(L,T+17), green(L,T+19) :- not green(L,T-1), green(L,T), L=9, T<endTime-19.
- green(L,T+1), green(L,T+2), green(L,T+3), green(L,T+4), green(L,T+5), green(L,T+6)  :- not green(L,T-1), green(L,T), L=10, T<endTime-6.
- green(L,T+1), green(L,T+2), green(L,T+3), green(L,T+4), green(L,T+5), green(L,T+6)  :- not green(L,T-1), green(L,T), L=11, T<endTime-6.
- green(L,T+1), green(L,T+2), green(L,T+3), green(L,T+4), green(L,T+5), green(L,T+6), green(L,T+7) :- not green(L,T-1), green(L,T), L=12, T<endTime-7.
- green(L,T+1), green(L,T+2), green(L,T+3), green(L,T+4), green(L,T+5), green(L,T+6), green(L,T+7) :- not green(L,T-1), green(L,T), L=13, T<endTime-7.
- green(L,T+1), green(L,T+2), green(L,T+3), green(L,T+4), green(L,T+5), green(L,T+6), green(L,T+7) :- not green(L,T-1), green(L,T), L=14, T<endTime-7.
- green(L,T+1), green(L,T+2), green(L,T+3), green(L,T+4), green(L,T+5), green(L,T+6), green(L,T+7), green(L,T+8)  :- not green(L,T-1), green(L,T), L=15, T<endTime-8.
- green(L,T+1), green(L,T+2), green(L,T+3), green(L,T+4), green(L,T+5), green(L,T+6), green(L,T+7), green(L,T+8)  :- not green(L,T-1), green(L,T), L=16, T<endTime-8.
+ 20{green(L,T+1); green(L,T+2); green(L,T+3); green(L,T+4); green(L,T+5); green(L,T+6); green(L,T+7); green(L,T+8); green(L,T+9); green(L,T+10); green(L,T+11); green(L,T+12); green(L,T+13); green(L,T+14); green(L,T+15); green(L,T+16); green(L,T+17); green(L,T+18); green(L,T+19);  green(L,T+20)}20 :- not green(L,T-1), green(L,T), L=9, T<endTime-20.
+ 6{ green(L,T+1); green(L,T+2); green(L,T+3); green(L,T+4); green(L,T+5); green(L,T+6) }6 :- not green(L,T-1), green(L,T), L=10, T<endTime-6.
+ 6{ green(L,T+1); green(L,T+2); green(L,T+3); green(L,T+4); green(L,T+5); green(L,T+6)}6  :- not green(L,T-1), green(L,T), L=11, T<endTime-6.
+ 7{green(L,T+1); green(L,T+2); green(L,T+3); green(L,T+4); green(L,T+5); green(L,T+6); green(L,T+7)}7 :- not green(L,T-1), green(L,T), L=12, T<endTime-7.
+ 7{green(L,T+1); green(L,T+2); green(L,T+3); green(L,T+4); green(L,T+5); green(L,T+6); green(L,T+7)}7 :- not green(L,T-1), green(L,T), L=13, T<endTime-7.
+ 7{green(L,T+1); green(L,T+2); green(L,T+3); green(L,T+4); green(L,T+5); green(L,T+6); green(L,T+7)}7 :- not green(L,T-1), green(L,T), L=14, T<endTime-7.
+ 8{green(L,T+1); green(L,T+2); green(L,T+3); green(L,T+4); green(L,T+5); green(L,T+6); green(L,T+7); green(L,T+8)}8  :- not green(L,T-1), green(L,T), L=15, T<endTime-8.
+ 8{green(L,T+1); green(L,T+2); green(L,T+3); green(L,T+4); green(L,T+5); green(L,T+6); green(L,T+7); green(L,T+8)}8  :- not green(L,T-1), green(L,T), L=16, T<endTime-8.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -165,7 +165,7 @@ conflict(1, 14).
 % Constraint (c): between switching of green phases consider 3 sec of red phase for all directions
 % Julius
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-not green(L2, T+1), not green(L2, T+2), not green(L2, T+3) :- green(L1, T), conflict(L1, L2), T<endTime -3 .
+3{not green(L2, T+1); not green(L2, T+2); not green(L2, T+3)}3 :- green(L1, T), not green(L1, T+1), T<endTime -3, trafficLight(L2) .
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -184,12 +184,12 @@ not green(L2, T+1), not green(L2, T+2), not green(L2, T+3) :- green(L1, T), conf
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % if tram arrives -> green
 % Tram 4
-not green(6, T), not green(2, T), not green(9, T), not green(13, T), not green(3, T), not green(4, T), not green(7, T), not green(8, T) :- tramArrive(41, T), time(T).
-not green(6, T), not green(2, T), not green(9, T), not green(13, T), not green(3, T), not green(4, T), not green(7, T), not green(8, T) :- tramArrive(42, T), time(T).
+8{not green(6, T); not green(2, T); not green(9, T); not green(13, T); not green(3, T); not green(4, T); not green(7, T); not green(8, T)}8 :- tramArrive(41, T), time(T).
+8{not green(6, T); not green(2, T); not green(9, T); not green(13, T); not green(3, T); not green(4, T); not green(7, T); not green(8, T)}8 :- tramArrive(42, T), time(T).
 
 % Tram 10
-not green(6, T), not green(2, T), not green(9, T), not green(13, T), not green(3, T), not green(4, T), not green(7, T), not green(8, T) :- tramArrive(101, T), time(T).
-not green(6, T), not green(2, T), not green(9, T), not green(13, T), not green(3, T), not green(4, T), not green(7, T), not green(8, T) :- tramArrive(102, T), time(T).
+8{not green(6, T); not green(2, T); not green(9, T); not green(13, T); not green(3, T); not green(4, T); not green(7, T); not green(8, T)}8 :- tramArrive(101, T), time(T).
+8{not green(6, T); not green(2, T); not green(9, T); not green(13, T); not green(3, T); not green(4, T); not green(7, T); not green(8, T)}8 :- tramArrive(102, T), time(T).
 
 % Bus 64
 green(5, T) :- tramArrive(641, T), time(T).
