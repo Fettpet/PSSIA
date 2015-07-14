@@ -165,8 +165,8 @@ conflict(1, 14).
 % Constraint (c): between switching of green phases consider 3 sec of red phase for all directions
 % Julius
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-3{not green(L2, T+1); not green(L2, T+2); not green(L2, T+3)}3 :- green(L1, T), not green(L1, T+1), T<endTime -3, trafficLight(L2) .
 
+3{not green(L2, T+1); not green(L2, T+2); not green(L2, T+3)}3 :- green(L1, T), not green(L1, T+1), T<endTime -3, trafficLight(L2) .
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Constraint: Consider a maximal waiting time of 2 min always.
