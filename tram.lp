@@ -89,11 +89,11 @@ tramArrive(642, 23160).
 tramArrive(642, 24060).
 tramArrive(642, 24960).
 tramArrive(642, 25860).
-tramArrive(642, 26640).
-tramArrive(642, 27840).
-tramArrive(642, 28620).
-tramArrive(642, 29820).
-tramArrive(642, 31080).
+tramArrive(642, 26700).
+tramArrive(642, 27900).
+tramArrive(642, 28560).
+tramArrive(642, 29760).
+tramArrive(642, 31140).
 tramArrive(642, 32340).
 tramArrive(642, 33540).
 tramArrive(642, 34740).
@@ -117,7 +117,7 @@ tramArrive(642, 55140).
 tramArrive(642, 56340).
 tramArrive(642, 57540).
 tramArrive(642, 58740).
-tramArrive(642, 59820).
+tramArrive(642, 59760).
 tramArrive(642, 60240).
 tramArrive(642, 61140).
 tramArrive(642, 62340).
@@ -381,7 +381,7 @@ tramArrive(631, 69180).
 tramArrive(631, 70260).
 tramArrive(631, 71100).
 tramArrive(631, 72060).
-tramArrive(631, 72960).
+tramArrive(631, 72900).
 tramArrive(631, 73860).
 tramArrive(631, 74700).
 tramArrive(632, 21840).
