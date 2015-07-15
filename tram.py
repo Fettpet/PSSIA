@@ -137,9 +137,10 @@ trams = {
         }
 }
 
-
+add = 0
 with open("tram.lp", "w") as lpFile:
         for tram, data in trams.items():
+                add += 10
                 for hour, minutes in data.items():
                         for minute in minutes:
-                                lpFile.write("tramArrive({}, {}).\n".format(tram, hour*60*60+60*minute))
+                                lpFile.write("tramArrive({}, {}).\n".format(tram, hour*60*60+60*minute+add))
